@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      text-align: center;
+      background: linear-gradient(180deg, #ffe6f2, #ffb3d9);
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Button */
+    button {
+      font-size: 28px;
+      padding: 20px 40px;
+      border-radius: 18px;
+      border: none;
+      cursor: pointer;
+      background: #ff5fa2;
+      color: white;
+      box-shadow: 0 0 25px rgba(255, 95, 162, 0.8);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 45px rgba(255, 95, 162, 1);
+    }
+
+    /* Banner */
+    #banner {
+      display: none;
+      color: #ff1a8c;
+      font-family: 'Pacifico', cursive;
+      font-size: 36px;
+      margin-top: 20px;
+    }
+
+    /* Paragraph */
+    #message {
+      display: block;
+      max-width: 750px;
+      margin: 30px auto;
+      font-family: 'Pacifico', cursive;
+      font-size: 19px;
+      color: #b30059;
+      text-align: left;
+      line-height: 1.7;
+      opacity: 0;
+      transition: opacity 2s;
+      border: 4px solid #ff4d94;
+      box-shadow: 0 0 25px rgba(255, 95, 162, 0.8), 0 0 50px rgba(255, 182, 193, 0.6);
+      padding: 25px;
+      border-radius: 15px;
+      transform: rotate(-1deg);
+      background: #fff0f5;
+    }
+
+    /* Photos */
+    .photo-container {
+      display: inline-block;
+      margin: 15px;
+      opacity: 0;
+      transition: opacity 1s;
+      border: 4px solid #ff4d94;
+      box-shadow: 0 0 25px rgba(255, 95, 162, 0.8), 0 0 50px rgba(255, 182, 193, 0.6);
+      border-radius: 15px;
+      transform: rotate(1deg);
+      background: #fff0f5;
+      padding: 5px;
+    }
+
+    img {
+      max-width: 240px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    img:hover {
+      transform: scale(1.05) rotate(-2deg);
+      box-shadow: 0 0 35px rgba(255, 102, 178, 1);
+    }
+
+    .caption {
+      display: none;
+      margin-top: 8px;
+      font-size: 15px;
+      color: #ff2f92;
+      font-style: italic;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+
+    /* Floating hearts and balloons */
+    .float {
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      background-size: cover;
+      z-index: 1;
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(-50px) rotate(360deg); opacity: 0; }
+    }
+
+    /* Bottom box */
+    #bottomBox {
+      width: 90%;
+      max-width: 400px;
+      margin: 60px auto;
+      padding: 15px;
+      border-radius: 15px;
+      background: #fff0f5;
+      border: 4px solid #ff4d94;
+      box-shadow: 0 0 25px rgba(255, 95, 162, 0.8), 0 0 50px rgba(255, 182, 193, 0.6);
+      cursor: pointer;
+      font-family: 'Pacifico', cursive;
+      color: #ff1a8c;
+      font-size: 18px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    #bottomBox:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 45px rgba(255, 95, 162, 1);
+    }
+  </style>
+</head>
+<body>
+
+  <button id="startBtn">Press Me 💗</button>
+  <h1 id="banner">HAPPY 18TH BIRTHDAY BABY!</h1>
+
+  <div id="message">
+    <p id="typedParagraph"></p>
+  </div>
+
+  <!-- Photos + captions -->
+  <div class="photo-container"><img src="photo1.jpg"><div class="caption">iloveyouforever</div></div>
+  <div class="photo-container"><img src="photo2.jpg"><div class="caption">please dont ever leave me</div></div>
+  <div class="photo-container"><img src="photo3.jpg"><div class="caption">this is supposed to be a secret feature</div></div>
+  <div class="photo-container"><img src="photo4.jpg"><div class="caption">i'm scared of losing you, youre my everything</div></div>
+  <div class="photo-container"><img src="photo5.jpg"><div class="caption">i hope when you realize this feature you realize how much you truly mean to me</div></div>
+  <div class="photo-container"><img src="photo6.jpg"><div class="caption">i hope and pray everyday nothing comes between us and our love</div></div>
+  <div class="photo-container"><img src="photo7.jpg"><div class="caption">i'll make you feel special every birthday no matter what</div></div>
+  <div class="photo-container"><img src="photo8.jpg"><div class="caption">the only thing that's gonna split us is death haha</div></div>
+
+  <audio id="song" src="happy.mp3"></audio>
+  <canvas id="confetti"></canvas>
+
+  <!-- Bottom clickable box -->
+  <div id="bottomBox">Click me for a special message 💌</div>
+
+  <script>
+    const startBtn = document.getElementById('startBtn');
+    const banner = document.getElementById('banner');
+    const typedParagraph = document.getElementById('typedParagraph');
+    const msg = document.getElementById('message');
+    const song = document.getElementById('song');
+    const photos = document.querySelectorAll('.photo-container');
+    const bottomBox = document.getElementById('bottomBox');
+
+    const paragraphText = "Happy 18th birthday baby. Iloveyousomuch Deki I'm so happy you're letting me spend this day with you mylove it means more to me than you even think it does! I'm sorry if this is corny or kind of bad I haven't done scripting in years! I tried my hardest and I hope it's enough to make you smile even the tiniest bit. I'm so happy I've gotten the chance to date you and make you mine because you've helped me in many secret ways you can never imagined and I don't think I would be here if it weren't for you. You mean the entire world to me, and I'll learn new ways every time just like this to express my growing infinite love for you Deki. You're 18 but still my baby at heart, and that'll never change! that was so corny lmfao but seriously Iloveyousomuch and no one and anything can get in between us.. the only way we'd get split apart is death but even then i'd haunt you so I can make sure you're safe and doing well in life. I never hosted a girl birthday despite what you think so I hope my first attempt at doing so is good enough but I accept feedback from you as well lol. And if this isn't enough we can always go out for dinner, or anything you want my treat I just want you to know even if you think birthdays are dumb I think otherwise! it's YOUR special day and I'll prove it to you by making it truly all about you baby. Ever since we've met I've grown to learn more about what it's like to be in a proper relationship and honestly you made me mature so much in a good way. I know I can be better for you and towards you, so I'll love you more and more each day until my heart explodes from it!! I love how you're filled with love and I hope one day you realize how much I truly love you baby, I will always want to return the love you give out you're such a bubbly, caring, loving, sweet person and that's what made me want you from day one other than your sweet cute singing voice lol (YOO HELP ME IM CRINGING WRITING THIS MY GOD) I wanted to make this because you're not the best at keeping letters, or important things in a nice tidy place BUT! youre always on your phone so what other amazing way to store an important day in a romantic way... your phone!!! Iloveyousomuch Deki, have the sweetest and best birthday ever.";
+
+    startBtn.addEventListener('click', () => {
+      startBtn.style.display = 'none';
+      banner.style.display = 'block';
+      msg.style.opacity = 1;
+      song.play();
+      launchConfetti();
+      typeParagraph(paragraphText, typedParagraph);
+      photos.forEach((p, i) => {
+        setTimeout(() => p.style.opacity = 1, 600*i);
+      });
+      generateFloatingDecor();
+    });
+
+    function typeParagraph(text, element) {
+      let i = 0;
+      element.textContent = '';
+      const speed = 20;
+      function type() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+
+    // Photo captions toggle
+    photos.forEach(container => {
+      const img = container.querySelector('img');
+      const cap = container.querySelector('.caption');
+      img.addEventListener('click', () => {
+        cap.style.display = cap.style.display === 'block' ? 'none' : 'block';
+      });
+    });
+
+    // Confetti
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    function launchConfetti() {
+      let pieces = Array.from({ length: 120 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 6 + 4,
+        d: Math.random() * 40,
+        color: ['#ff4d94','#ffcce6','#ff80bf'][Math.floor(Math.random()*3)]
+      }));
+
+      let angle = 0;
+      function draw() {
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        pieces.forEach(p => {
+          ctx.beginPath();
+          ctx.fillStyle = p.color;
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+          ctx.fill();
+        });
+        update();
+      }
+      function update() {
+        angle += 0.01;
+        pieces.forEach(p => {
+          p.y += Math.cos(angle + p.d) + 1;
+          p.x += Math.sin(angle);
+          if (p.y > canvas.height) p.y = -10;
+        });
+      }
+      let interval = setInterval(draw, 20);
+      setTimeout(() => clearInterval(interval), 4000);
+    }
+
+    // Bottom box click
+    bottomBox.addEventListener('click', () => {
+      alert("Many more memories to come my beloved, this is just the start of it.");
+    });
+
+    // Floating hearts & balloons
+    function generateFloatingDecor() {
+      const icons = ['💖','🎈','💗','🎉','💝'];
+      for(let i=0; i<30; i++){
+        const span = document.createElement('span');
+        span.classList.add('float');
+        span.textContent = icons[Math.floor(Math.random()*icons.length)];
+        span.style.left = Math.random()*100 + 'vw';
+        span.style.animationDuration = (5 + Math.random()*5) + 's';
+        span.style.fontSize = (20 + Math.random()*20) + 'px';
+        document.body.appendChild(span);
+      }
+    }
+
+  </script>
+
+</body>
+</html>
